@@ -8,7 +8,7 @@ def readfile(filename):
         Si filename n'existe pas, la fonction retourne une liste vide.
     """
 
-    return open("filename", "r").readlines()
+    return open(filename, "r").readlines()
 
 
 def get_words(line):
@@ -62,7 +62,17 @@ def create_index(filename):
         la liste des indices des lignes qui contiennent ce mot.
     """
 
+    lines = readfile(filename)
+    words = [word for x in [get_words(line) for line in lines] for word in x]
+    index_dict = dict.fromkeys(words, [])
 
+    for i in range(len(lines)):
+        for j in lines[i].split(" "):
+            index_dict[j].append(i)
+    print(words)
+    return index_dict
+
+create_index("README.txt")
 def get_lines(words, index):
     """ Détermine les lignes qui contiennent tous les mots indexes dans ``words``,
        selon l'index ``index``.
