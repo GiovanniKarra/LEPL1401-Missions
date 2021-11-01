@@ -1,3 +1,6 @@
+import re
+
+
 def readfile(filename):
     """ Crée une liste des lignes contenues dans un fichier dont le nom est ``filename``
 
@@ -34,7 +37,9 @@ def get_words(line):
         une liste des mots dans la chaîne, en minuscules, et sans ponctuation.
     """
 
-    return [x.lower() for x in line.split(" ") if x.isalpha]
+    words = re.findall(r"[\w']+|[.,!?;]", line)
+
+    return [w for w in words if w.isalpha()]
 
 
 def create_index(filename):
@@ -65,14 +70,15 @@ def create_index(filename):
     lines = readfile(filename)
     words = [word for x in [get_words(line) for line in lines] for word in x]
     index_dict = dict.fromkeys(words, [])
+    index_dict = {word: [] for word in words}
 
     for i in range(len(lines)):
-        for j in lines[i].split(" "):
+        for j in get_words(lines[i]):
             index_dict[j].append(i)
-    print(words)
+
     return index_dict
 
-create_index("README.txt")
+
 def get_lines(words, index):
     """ Détermine les lignes qui contiennent tous les mots indexes dans ``words``,
        selon l'index ``index``.
@@ -96,3 +102,10 @@ def get_lines(words, index):
    Retourne:
        une liste des nombres des lignes contenant tous les mots indiqués
    """
+
+    common_indices = [i for word in words for i in index[word.lower()]]
+
+    for word in words:
+        common_indices = set(common_indices).intersection(set(index[word.lower()]))
+
+    return list(common_indices)
