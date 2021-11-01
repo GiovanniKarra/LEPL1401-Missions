@@ -8,7 +8,7 @@ def readfile(filename):
         Si filename n'existe pas, la fonction retourne une liste vide.
     """
 
-    return
+    return open("filename", "r").readlines()
 
 
 def get_words(line):
@@ -33,6 +33,8 @@ def get_words(line):
     Retourne:
         une liste des mots dans la chaîne, en minuscules, et sans ponctuation.
     """
+
+    return [x.lower() for x in line.split(" ") if x.isalpha]
 
 
 def create_index(filename):
