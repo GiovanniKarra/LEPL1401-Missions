@@ -8,6 +8,8 @@ def readfile(filename):
         Si filename n'existe pas, la fonction retourne une liste vide.
     """
 
+    return
+
 
 def get_words(line):
     """ pour une chaîne de caractères donnée, retourne une liste des mots dans la chaîne,
