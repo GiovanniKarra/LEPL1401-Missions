@@ -69,7 +69,6 @@ def create_index(filename):
 
     lines = readfile(filename)
     words = [word for x in [get_words(line) for line in lines] for word in x]
-    index_dict = dict.fromkeys(words, [])
     index_dict = {word: [] for word in words}
 
     for i in range(len(lines)):
