@@ -1,6 +1,3 @@
-import re
-
-
 def readfile(filename):
     """ Crée une liste des lignes contenues dans un fichier dont le nom est ``filename``
 
@@ -11,7 +8,14 @@ def readfile(filename):
         Si filename n'existe pas, la fonction retourne une liste vide.
     """
 
-    return open(filename, "r").readlines()
+    try:
+        file = open(filename, "r")
+        lines = [l.strip("\n") for l in file.readlines()]
+
+        return [l for l in lines if l != ""]
+
+    except FileNotFoundError:
+        return []
 
 
 def get_words(line):
@@ -37,9 +41,18 @@ def get_words(line):
         une liste des mots dans la chaîne, en minuscules, et sans ponctuation.
     """
 
-    words = re.findall(r"[\w']+|[.,!?;]", line)
+    words = []
+    temp = line.split()
 
-    return [w for w in words if w.isalpha()]
+    for w in temp:
+        word = ""
+        for char in w:
+            if char.isalpha():
+                word += char.lower()
+
+        words.append(word)
+
+    return [w for w in words if w != "\n" and w != "" and w != " "]
 
 
 def create_index(filename):
@@ -73,7 +86,8 @@ def create_index(filename):
 
     for i in range(len(lines)):
         for j in get_words(lines[i]):
-            index_dict[j].append(i)
+            if i not in index_dict[j]: index_dict[j].append(i)
+            index_dict[j] = sorted(index_dict[j])
 
     return index_dict
 
@@ -102,9 +116,12 @@ def get_lines(words, index):
        une liste des nombres des lignes contenant tous les mots indiqués
    """
 
-    common_indices = [i for word in words for i in index[word.lower()]]
+    try:
+        common_indices = [i for word in words for i in index[word.lower()]]
+    except KeyError:
+        return []
 
     for word in words:
         common_indices = set(common_indices).intersection(set(index[word.lower()]))
 
-    return list(common_indices)
+    return sorted(list(common_indices))
