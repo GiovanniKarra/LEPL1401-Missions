@@ -112,11 +112,11 @@ class Album:
     def length(self) -> (int, int):
         return sum([s.d.to_secondes() for s in self.songs]), len(self.songs)
 
-    def is_not_max(self, song: Chanson) -> bool:
-        return all(x < y for x, y in zip((self.length[0] + song.d.to_secondes(), self.length[1] + 1), (75 * 60, 100)))
+    def is_not_max(self, d: Duree = Duree()) -> bool:
+        return all(x < y for x, y in zip((self.length[0] + d.to_secondes(), self.length[1] + 1), (75 * 60, 100)))
 
     def add(self, song: Chanson) -> bool:
-        if not self.is_not_max(song):
+        if not self.is_not_max(song.d):
             return False
 
         self.songs.append(song)
@@ -142,6 +142,25 @@ if __name__ == "__main__":
     # Grâce à la ligne ci-dessus, le code ci-dessous ne sera exécuté que si on n'exécute ce fichier directement.
     # Ceci nous permet d'éviter que le code ci-dessous sera exécuté lorsqu'on fait un import de ce fichier,
     # par exemple dans notre fichier test.py
-    pass
-    # A COMPLETER PAR LES ETUDIANTS
-    # (mettez ici votre code pour créer les albums à partir de la lecture du fichier 'music-db.txt')
+    with open("music_db.txt", "r") as f:
+        lines = f.readlines()
+
+    albums = []
+    parameters = [(line.split()[0], line.split()[1], [int(x) for x in line.split()[2:]]) for line in lines]
+    songs = [Chanson(n, a, Duree(0, d[0], d[1])) for n, a, d in parameters]
+    album_id = 1
+
+    album = Album(album_id)
+
+    for song in songs:
+        if not album.add(song):
+            album_id += 1
+            albums.append(album)
+            album = Album(album_id)
+            album.add(song)
+
+    albums.append(album)
+
+    output = "\n\n".join([str(a) for a in albums])
+
+    print(output)
