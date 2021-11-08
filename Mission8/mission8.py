@@ -13,13 +13,13 @@ class Duree:
         self.m = m
         self.h = h
 
-        if s >= 60:
-            self.s = s % 60
-            self.m += s // 60
+        if self.s >= 60:
+            self.m += self.s // 60
+            self.s = self.s % 60
 
-        if m >= 60:
-            self.m = s % 60
-            self.h += s // 60
+        if self.m >= 60:
+            self.h += self.m // 60
+            self.m = self.m % 60
 
     def __str__(self):
         """

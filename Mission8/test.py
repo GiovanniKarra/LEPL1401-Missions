@@ -36,7 +36,8 @@ def test_Duree_to_secondes():
 # FONCTION POUR TESTER LA METHODE delta DE LA CLASSE Duree
 def test_Duree_delta():
     # A COMPLETER PAR LES ETUDIANTS
-    pass
+    assert d0.delta(d1) == -d1.to_secondes()
+    assert d1.delta(d0) == d1.to_secondes()
 
 
 # FONCTION POUR TESTER  LA METHODE apres DE LA CLASSE Duree
@@ -49,7 +50,8 @@ def test_Duree_apres():
 # FONCTION POUR TESTER LA METHODE ajouter DE LA CLASSE Duree
 def test_Duree_ajouter():
     # A COMPLETER PAR LES ETUDIANTS
-    pass
+    d0.ajouter(d1)
+    assert str(d0) == str(d1)
 
 
 # APPEL DES DIFFERENTES FONCTIONS TEST
