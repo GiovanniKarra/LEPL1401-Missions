@@ -134,8 +134,8 @@ class Album:
         """
         d = Duree(s=self.length[0])
 
-        return f"Album {self.id} ({self.length[1]} chansons, {str(d)})" + "".join(
-               [f"\n{i[0] + 1:02}: {str(i[1])}" for i in enumerate(self.songs)])
+        return f"Album {self.id} ({self.length[1]} chansons, {d})" + "".join(
+               [f"\n{i[0] + 1:02}: {i[1]}" for i in enumerate(self.songs)])
 
 
 if __name__ == "__main__":
