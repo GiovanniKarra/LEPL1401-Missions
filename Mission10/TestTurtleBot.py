@@ -48,7 +48,7 @@ class TestTurtleBot(unittest.TestCase):
         self.assertAlmostEqual(self.t.angle(), expected_angle,
                                msg="Your turtleBot changed heading while moving forward")
 
-    def test_movebackward(self):
+    def test_move_backward(self):
         backward = 50
         x, y = self.t.position()
         expected_position = (x - backward, y - 0)

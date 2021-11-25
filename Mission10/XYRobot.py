@@ -1,11 +1,12 @@
 # un module pour dessiner des figures simples sur un plan XY
-from graphics import GraphWin, Line, Point
+from graphics import *
 # nous avons aussi besoin des fonctions cos et sin ainsi que 
 # la valeur pi pour notre calcul de la position d'un point
 from math import pi, cos, sin
 
 
 class XYRobot:
+    historique = []
 
     def __init__(self, nom, x=0, y=0):
         # nom du robot
@@ -18,6 +19,9 @@ class XYRobot:
         # fenêtre graphique sur laquelle le chemin du robot sera tracé;
         # le point à la position (0,0) se trouve dans le coin supérieur gauche
         self.__win = GraphWin()
+
+    def window(self):
+        return self.__win
 
     def __str__(self):
         """
@@ -54,7 +58,7 @@ class XYRobot:
         self.__angle = angle
 
     def position(self):
-        return (self.x(), self.y())
+        return self.x(), self.y()
 
     def __draw_from(self, old_x, old_y):
         """
@@ -81,11 +85,13 @@ class XYRobot:
         """ fait avancer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
         self.__move(distance, 1)
+        self.historique.append(('forward', distance))
 
     def move_backward(self, distance):
         """ fait reculer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
         self.__move(distance, -1)
+        self.historique.append(('backward', distance))
 
     def __turn(self, direction):
         """ méthode auxiliaire pour les méthodes turn_right() et turn_left()
@@ -101,12 +107,23 @@ class XYRobot:
             (dans le sens des aiguilles d'une montre)
         """
         self.__turn(1)
+        self.historique.append(('right', 90))
 
     def turn_left(self):
         """ fait tourner le robot de 90 degrés vers la gauche
             (dans le sens contraire des aiguilles d'une montre)
         """
         self.__turn(-1)
+        self.historique.append(('left', 90))
+
+    def history(self):
+        return self.historique
+
+    def undraw(self):
+        return self.undraw()
+
+    def unplay(self):
+        self.undraw()
 
 
 # Exemple d'utilisation de cette classe (il suffit d'exécuter ce fichier)
@@ -144,3 +161,6 @@ if __name__ == '__main__':
     r2d2.move_forward(50)
     r2d2.turn_right()
     print(r2d2)
+
+    print(r2d2.history())
+    r2d2.unplay()
