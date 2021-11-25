@@ -8,10 +8,6 @@ import turtle
 
 class TurtleBot:
     win = turtle.Screen()
-    global tess
-    tess = turtle.Turtle()
-    global historique
-    historique = []
 
     def __init__(self, nom, x=0, y=0):
         # nom du robot
@@ -23,6 +19,9 @@ class TurtleBot:
         self.__angle = 0
         # fenêtre graphique sur laquelle le chemin du robot sera tracé;
         # le point à la position (0,0) se trouve dans le coin supérieur gauche
+
+        self.historique = []
+        self.tess = turtle.Turtle()
 
     def __str__(self):
         """
@@ -36,45 +35,45 @@ class TurtleBot:
 
     def angle(self):
         "retourne l'angle en degres représentant la direction du robot"
-        return tess.heading()
+        return self.tess.heading()
 
     def position(self):
-        return tess.position()
+        return self.tess.position()
 
     def move_forward(self, distance):
         """ fait avancer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
 
-        tess.forward(distance)
-        historique.append(('forward', distance))
+        self.tess.forward(distance)
+        self.historique.append(('forward', distance))
 
     def move_backward(self, distance):
         """ fait reculer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
 
-        tess.backward(distance)
-        historique.append(('backward', distance))
+        self.tess.backward(distance)
+        self.historique.append(('backward', distance))
 
     def turn_right(self):
         """ fait tourner le robot de 90 degrés vers la droite
             (dans le sens des aiguilles d'une montre)
         """
-        tess.right(90)
-        historique.append(('right', 90))
+        self.tess.right(90)
+        self.historique.append(('right', 90))
 
     def turn_left(self):
         """ fait tourner le robot de 90 degrés vers la gauche
             (dans le sens contraire des aiguilles d'une montre)
         """
-        tess.left(90)
-        historique.append(('left', 90))
+        self.tess.left(90)
+        self.historique.append(('left', 90))
 
     def history(self):
-        return historique
+        return self.historique
 
     def unplay(self):
-        for i in range(len(historique)):
-            tess.undo()
+        for _ in range(len(self.historique)):
+            self.tess.undo()
 
 
 # Exemple d'utilisation de cette classe (il suffit d'exécuter ce fichier)

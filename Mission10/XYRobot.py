@@ -6,7 +6,6 @@ from math import pi, cos, sin
 
 
 class XYRobot:
-    historique = []
 
     def __init__(self, nom, x=0, y=0):
         # nom du robot
@@ -19,6 +18,8 @@ class XYRobot:
         # fenêtre graphique sur laquelle le chemin du robot sera tracé;
         # le point à la position (0,0) se trouve dans le coin supérieur gauche
         self.__win = GraphWin()
+
+        self.historique = []
 
     def window(self):
         return self.__win
@@ -50,12 +51,15 @@ class XYRobot:
 
     def __set_x(self, x):
         self.__x = x
+        self.historique.append([3, self.x(), self.y()])
 
     def __set_y(self, y):
         self.__y = y
+        self.historique.append([4, self.x(), self.y()])
 
     def __set_angle_rad(self, angle):
         self.__angle = angle
+        self.historique.append([5, self.angle()])
 
     def position(self):
         return self.x(), self.y()
@@ -85,13 +89,13 @@ class XYRobot:
         """ fait avancer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
         self.__move(distance, 1)
-        self.historique.append(('forward', distance))
+        self.historique.append([1, distance, self.angle()])
 
     def move_backward(self, distance):
         """ fait reculer le robot de distances pixels
             et trace une ligne lors de ce mouvement """
         self.__move(distance, -1)
-        self.historique.append(('backward', distance))
+        self.historique.append([-1, distance, self.angle()])
 
     def __turn(self, direction):
         """ méthode auxiliaire pour les méthodes turn_right() et turn_left()
@@ -107,14 +111,14 @@ class XYRobot:
             (dans le sens des aiguilles d'une montre)
         """
         self.__turn(1)
-        self.historique.append(('right', 90))
+        self.historique.append([2, self.angle()])
 
     def turn_left(self):
         """ fait tourner le robot de 90 degrés vers la gauche
             (dans le sens contraire des aiguilles d'une montre)
         """
         self.__turn(-1)
-        self.historique.append(('left', 90))
+        self.historique.append([-2, self.angle()])
 
     def history(self):
         return self.historique
@@ -123,7 +127,37 @@ class XYRobot:
         return self.undraw()
 
     def unplay(self):
-        self.undraw()
+        for i in range(len(self.historique)):
+            # forward case
+            if self.historique[i][0] == 1:
+                self.__set_angle_rad(self.historique[i][2])
+                self.move_forward(-self.historique[i][1])
+            # backward case
+            if self.historique[i][0] == 1:
+                self.__set_angle_rad(self.historique[i][2])
+                self.move_forward(self.historique[i][1])
+
+            # turn left case
+            if self.historique[i][0] == -2:
+                self.turn_right()
+
+            # turn right case
+            if self.historique[i][0] == 2:
+                self.turn_left()
+
+            # set_x case
+            if self.historique[i][0] == 3:
+                self.__set_x(self.historique[i][1])
+                self.__set_y(self.historique[i][2])
+
+            # set y case
+            if self.historique[i][0] == 4:
+                self.__set_x(self.historique[i][1])
+                self.__set_y(self.historique[i][2])
+
+            # set angle case
+            if self.historique[i][0] == 5:
+                self.__set_angle_rad(self.historique[i][1])
 
 
 # Exemple d'utilisation de cette classe (il suffit d'exécuter ce fichier)
